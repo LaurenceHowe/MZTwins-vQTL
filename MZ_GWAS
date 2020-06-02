@@ -1,0 +1,128 @@
+#MZ twins GWAS: Add paths
+plinkfile=
+phenfile=
+covfile=
+malelist=
+
+#Model 1: PCA residualised absolute phenotypic difference ~ Genotype
+#Add list of phenotypes
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--out ./output/M1_${j}
+
+done
+
+
+#Model 2: Absolute phenotypic difference (no PC adjustment) ~ Genotype
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${i} \
+--out ./output/M2_${i}
+
+done
+
+
+#Model 3: PCA residualised absolute phenotypic difference ~ Genotype + WPM
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+k=`printf ${i}M`
+
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--covar ${covfile} \
+--covar-name ${k} \
+--out ./output/M3_${i}
+
+done
+
+
+#Model 4: Model 1 stratified for sex
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--keep ${malelist} \
+--out ./output/M4_Male_${i}
+
+done
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--remove ${malelist} \
+--out ./output/M4_Female_${i}
+
+done
+
+
+#Model 5: Model 1 with sex interaction term
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+
+plink \
+--bfile ${plinkfile} \
+--linear interaction \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--covar ${covfile} \
+--covar-name Sex \
+--out ./output/M5_${i}
+
+done
+
+#Model 6: Model 1 with age interaction term
+#Note not possible to run in UK Biobank with limited sample size
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_resid`
+
+plink \
+--bfile ${plinkfile} \
+--linear interaction \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${j} \
+--covar ${covfile} \
+--covar-name Age \
+--out ./output/M6_${i}
+
+done
