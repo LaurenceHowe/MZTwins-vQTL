@@ -16,6 +16,8 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
+--covar ${covfile} \
+--covar-name Age, Sex \
 --out ./output/M1_${j}
 
 done
@@ -32,6 +34,8 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${i} \
+--covar ${covfile} \
+--covar-name Age, Sex \
 --out ./output/M2_${i}
 
 done
@@ -51,7 +55,7 @@ plink \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --covar ${covfile} \
---covar-name ${k} \
+--covar-name ${k}, Age, Sex \
 --out ./output/M3_${i}
 
 done
