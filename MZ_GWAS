@@ -73,6 +73,8 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
+--covar ${covfile} \
+--covar-name ${k}, Age \
 --keep ${malelist} \
 --out ./output/M4_Male_${i}
 
@@ -88,6 +90,8 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
+--covar ${covfile} \
+--covar-name ${k}, Age \
 --remove ${malelist} \
 --out ./output/M4_Female_${i}
 
