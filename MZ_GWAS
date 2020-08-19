@@ -107,11 +107,12 @@ j=`printf ${i}_resid`
 plink \
 --bfile ${plinkfile} \
 --linear interaction \
+--parameters 1,2,3,4 \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --covar ${covfile} \
---covar-name Sex \
+--covar-name Sex,Age \
 --out ./output/M5_${i}
 
 done
@@ -126,11 +127,12 @@ j=`printf ${i}_resid`
 plink \
 --bfile ${plinkfile} \
 --linear interaction \
+--parameters 1,2,3,4 \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --covar ${covfile} \
---covar-name Age \
+--covar-name Age,Sex \
 --out ./output/M6_${i}
 
 done
