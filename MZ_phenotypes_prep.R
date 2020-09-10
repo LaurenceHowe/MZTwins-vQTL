@@ -40,9 +40,14 @@ data <- merge(mz, phen, by = "IID")
 #Use below if FID/IID are both in phenotype file
 #data <- merge(mz, phen, by = c("FID", "IID"))  
 
+#Add code to remove any exclusions (e.g. non-europeans)
+
 #Double check that there are no singletons
 duplicates <- data[duplicated(data$FID), ]
 twins <- data[which(data$FID %in% duplicates$FID), ]
+
+#Optional: Restrict to individuals which have PC data. 
+twins <- twins[which(twins$IID %in% phen$IID & twins$IID %in% pc$IID), ]
 
 #Generate ordered lists of twins
 twin1 <- twins[which(! twins$IID %in% duplicates$IID), ]
@@ -53,6 +58,7 @@ twin2o <- twin2[order(twin2$FID), ]
 #Extract FID, Age, Sex and IID of one twin. 
 #Note that it's assumed that both twins are genotyped. If only one twin is genotyped will need to tweak script to ensure that IIDs here are from the genotyped twin.
 sexage <- data.table(FID = twin1o$FID, IID = twin1o$IID, Sex = twin1o$Sex, Age = twin1o$Age)
+
 
 #####################################################
 #Generate the within-pair mean for each MZ twin pair#
@@ -144,7 +150,7 @@ resid_all <- cbind(test_t, test_nopc, test_nx)
 resid_df <- cbind(resid_df, resid_all)
 }
 
-#Name the phenotypes after the models
+#Sort our phenotype names to reference the models
 
 namelist2 <- NULL
 for (i in phenlist)
@@ -164,7 +170,8 @@ names(resid_df) <- namelist2
 #Rank normal transformation#
 ############################
 
-namelist2 <- NULL
+namelist_rnt <- NULL
+
 for (i in phenlist)
 {
 temp1 <- paste(i, "A", sep="")
@@ -173,18 +180,20 @@ temp3 <- paste(i, "C", sep="")
 
 temp4 <- cbind(temp1, temp2, temp3)
 
-namelist2 <- cbind(namelist2, temp4)
+namelist_rnt <- cbind(namelist_rnt, temp4)
 }
 
-names(resid_df) <- namelist2
+names(resid_df) <- namelist_rnt
 
 ############################
 #Rank normal transformation#
 ############################
 
+#Uses the CRAN package 'RNOmni' for the transformation
+
 output <- NULL
 
-for (i in 1:length(namelist))
+for (i in 1:length(namelist_rnt))
 {
 
 resid_df$PHEN <- resid_df[, ..i]
@@ -203,16 +212,17 @@ out <- resid_df$PHEN2
 output <- cbind(output, out)
 }
 
-#Generate output same as resid_df but rank normalised
+#Generate output which is same as resid_df but rank normalised
 output2 <- as.data.frame(output)
 
 #Add the names
-names(output2) <- namelist2
+names(output2) <- namelist_rnt
 
-####################################
+################################
+#Combine to create output files#
+################################
 
-
-#Combine to create output files
+#Generate the phenotype and covariate files
 phenotypes <- cbind(sexage, output2)
 covariates <- cbind(sexage, ave)
 
