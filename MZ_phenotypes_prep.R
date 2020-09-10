@@ -121,50 +121,100 @@ for (i in 1:length(phenlist))
 k <- i + 4
 mzfull$PHEN <- mzfull[, ..k]
 
-##Generate residuals for Phenotypes A, B and C.
+##Generate residuals for _t, _nopc and _nx
 
-modelA <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age + Sex, data = mzfull)
-testA <- mzfull[ , phenlist[i], with = FALSE]
-names(testA) <- c("V1")
-testA$V1[! is.na(test$V1)]  <- c(resid(modelA))
+model_t <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age + Sex, data = mzfull)
+test_t <- mzfull[ , phenlist[i], with = FALSE]
+names(test_t) <- c("V1")
+test_t$V1[! is.na(test_t$V1)]  <- c(resid(model_t))
   
-modelB <- lm(PHEN ~ Age + Sex, data = mzfull)
-testB <- mzfull[ , phenlist[i], with = FALSE]
-names(testB) <- c("V1")
-testB$V1[! is.na(test$V1)]  <- c(resid(modelB))
+model_nopc <- lm(PHEN ~ Age + Sex, data = mzfull)
+test_nopc <- mzfull[ , phenlist[i], with = FALSE]
+names(test_nopc) <- c("V1")
+test_nopc$V1[! is.na(test_nopc$V1)]  <- c(resid(model_nopc))
   
-modelC <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age, data = mzfull)
-testC <- mzfull[ , phenlist[i], with = FALSE]
-names(testC) <- c("V1")
-testC$V1[! is.na(test$V1)]  <- c(resid(modelC))
+model_nx <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age, data = mzfull)
+test_nx <- mzfull[ , phenlist[i], with = FALSE]
+names(test_nx) <- c("V1")
+test_nx$V1[! is.na(test_nx$V1)]  <- c(resid(model_nx))
   
-resid_ABC <- cbind(testA, testB, testC)
+resid_all <- cbind(test_t, test_nopc, test_nx)
 
   
-resid_df <- cbind(resid_df, resid_ABC)
+resid_df <- cbind(resid_df, resid_all)
 }
+
+#Name the phenotypes after the models
+
+namelist2 <- NULL
+for (i in phenlist)
+{
+temp1 <- paste(i, "_t", sep="")
+temp2 <- paste(i, "_nopc", sep="")
+temp3 <- paste(i, "_nx", sep="")
+
+temp4 <- cbind(temp1, temp2, temp3)
+
+namelist2 <- cbind(namelist2, temp4)
+}
+
+names(resid_df) <- namelist2
 
 ############################
 #Rank normal transformation#
 ############################
 
-rnorm = apply(tmp2[,..Proteins], 2, rankNorm)
-
-
-
-#Again create a list of names: Height -> Height_resid
 namelist2 <- NULL
 for (i in phenlist)
 {
-temp <- paste(i, "_resid", sep="")
-namelist2 <- cbind(namelist2, temp)
+temp1 <- paste(i, "A", sep="")
+temp2 <- paste(i, "B", sep="")
+temp3 <- paste(i, "C", sep="")
+
+temp4 <- cbind(temp1, temp2, temp3)
+
+namelist2 <- cbind(namelist2, temp4)
 }
 
 names(resid_df) <- namelist2
 
+############################
+#Rank normal transformation#
+############################
+
+output <- NULL
+
+for (i in 1:length(namelist))
+{
+
+resid_df$PHEN <- resid_df[, ..i]
+  
+#Restrict to complete cases for each phenotype
+temp <- resid_df[! is.na(resid_df$PHEN), ]
+
+#Rank normalise
+ranknorm_phen <- rankNorm(temp$PHEN)
+resid_df$PHEN2 <- NULL
+resid_df$PHEN2[! is.na(resid_df$PHEN)] <- ranknorm_phen
+
+#Extract rank normalised phenotype
+out <- resid_df$PHEN2
+
+output <- cbind(output, out)
+}
+
+#Generate output same as resid_df but rank normalised
+output2 <- as.data.frame(output)
+
+#Add the names
+names(output2) <- namelist2
+
+####################################
+
+
 #Combine to create output files
-phenotypes <- cbind(info, mz_diff, resid_df)
-covariates <- cbind(info, ave)
+phenotypes <- cbind(sexage, output2)
+covariates <- cbind(sexage, ave)
 
 #Also generate list of males for sex-stratified analysis
 males <- covariates[which(covariates$Sex == 1), ]
