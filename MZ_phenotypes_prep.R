@@ -110,9 +110,9 @@ mzdiffpc <- merge(mz_diff, pc, by = "IID")
 mzfull <- merge(mzdiffpc, sexage, by = "IID") 
 #mzfull <- merge(mzdiffpc, sexage, by = c("FID", "IID")
 
-########################################################################
-#Generate the residualised, transformed and standardised mz diff scores#
-########################################################################
+####################################################
+#Generate the covariate-residualised mz diff scores#
+####################################################
 
 #Phenotype a) _t includes age,sex,10pcs
 #Phenotype b) _nopc includes age,sex
@@ -150,7 +150,7 @@ resid_all <- cbind(test_t, test_nopc, test_nx)
 resid_df <- cbind(resid_df, resid_all)
 }
 
-#Sort our phenotype names to reference the models
+#Sort out phenotype names to reference the models
 
 namelist2 <- NULL
 for (i in phenlist)
@@ -166,9 +166,6 @@ namelist2 <- cbind(namelist2, temp4)
 
 names(resid_df) <- namelist2
 
-############################
-#Rank normal transformation#
-############################
 
 namelist_rnt <- NULL
 
