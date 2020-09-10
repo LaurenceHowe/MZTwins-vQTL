@@ -14,4 +14,4 @@ The GWAS will use PLINK binary format files (.bed, .bim, .fam).
 <br>
 Note that these scripts are not fully automated so will require some tweaking, mostly to file paths!
 <br>
-Email me at Laurence.Howe@bristol.ac.uk if you have any queries.
+Email Laurence.Howe@bristol.ac.uk or E.Assary@qmul.ac.uk if you have any queries.
