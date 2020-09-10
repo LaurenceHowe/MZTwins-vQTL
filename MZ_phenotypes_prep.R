@@ -4,7 +4,11 @@
 #2) Phenotype file containing phenotypes as well as age and sex with IID linkable to File 1.
 #3) Principal components file containing the first 20 PCs with IID linkable to File 1.
 
-#Filepath names, please edit with file paths and output names
+
+##############################################################
+#Filepath names, please edit with file paths and output names#
+##############################################################
+
 mzname <- paste(" ")
 phenname <- paste(" ")
 pcname <- paste(" ")
@@ -13,10 +17,17 @@ outphenname <- paste(" ")
 outcovname <- paste(" ")
 malelistname <- paste(" ")
 
-#Package requirements
+######################
+#Package requirements#
+######################
+
 require(data.table)
 require(dplyr)
 require(tidyr)
+require(RNOmni)
+#############
+#Main script#
+#############
 
 #Read in files
 mz <- fread(mzname)
@@ -27,7 +38,6 @@ pc <- fread(pcname)
 data <- merge(mz, phen, by = "IID") 
 #Use below if FID/IID are both in phenotype file
 #data <- merge(mz, phen, by = c("FID", "IID"))  
-
 
 #Double check that there are no singletons
 duplicates <- data[duplicated(data$FID), ]
@@ -41,9 +51,12 @@ twin2o <- twin2[order(twin2$FID), ]
 
 #Extract FID, Age, Sex and IID of one twin. 
 #Note that it's assumed that both twins are genotyped. If only one twin is genotyped will need to tweak script to ensure that IIDs here are from the genotyped twin.
-info <- data.table(FID = twin1o$FID, IID = twin1o$IID, Sex = twin1o$Sex, Age = twin1o$Age)
+sexage <- data.table(FID = twin1o$FID, IID = twin1o$IID, Sex = twin1o$Sex, Age = twin1o$Age)
 
-#Generate the within-pair mean
+#####################################################
+#Generate the within-pair mean for each MZ twin pair#
+#####################################################
+
 #In the case of "-c(1:4)", columns 5 and onwards are the phenotypes which need to be averaged (columns 1-4 are FID, IID, Age and Sex)
 # will require editing.  
 ave <- 0.5 * (twin1o[, -c(1:4)] + twin2o[, -c(1:4)])
@@ -59,10 +72,68 @@ namelist <- cbind(namelist, temp)
 }
 
 names(ave) <- namelist
-				
-#Generate the pair difference
+
+#################################
+#Generate the MZ pair difference#
+#################################
+
 #Again tweak columns as for the within-pair
 mz_diff <- abs(twin1o[, -c(1:4)] - twin2o[, -c(1:4)])
+
+#Rename phenotypes such that Height -> Height_df
+
+namelist <- NULL
+for (i in phenlist)
+{
+temp <- paste(i, "df", sep="")
+namelist <- cbind(namelist, temp)
+}
+
+names(mz_diff) <- namelist
+
+#########################################################
+#Merge MZ differences with covariates for transformation#
+#########################################################
+
+#Merge with principal components
+mzdiffpc <- merge(mzdiff, pc, by = "IID")
+#mzdiffpc <- merge(mzdiff, pc, by = c("FID", "IID")
+
+#Merge with sex and age
+mzfull <- merge(mzdiffpc, sexage, by = "IID") 
+#mzfull <- merge(mzdiffpc, sexage, by = c("FID", "IID")
+
+########################################################################
+#Generate the residualised, transformed and standardised mz diff scores#
+########################################################################
+
+#Phenotype a) _t includes age,sex,10pcs
+#Phenotype b) _nopc includes age,sex
+#Phenotype c) _nx includes age,10pcs 
+
+resid_a <- NULL
+resid_b <- NULL
+resid_c <- NULL
+
+for (i in 1:length(phenlist))
+{
+#K may require tweaking.. should indicate 1st phenotype column
+#Add 10 PCs and age and sex
+k <- i + 4
+mzfull$PHEN <- mzfull[, ..k]
+
+##Generate residuals for Phenotypes A, B and C.
+
+modelA <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age + Sex, data = mzfull)
+modelB <- lm(PHEN ~ Age + Sex, data = mzfull)
+modelC <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age, data = mzfull)
+
+test <- datapcinfo[ , phenlist[i], with = FALSE]
+names(test) <- c("V1")
+test$V1[! is.na(test$V1)]  <- c(model.st)
+
+resid_t <- cbind(resid_t, test)
+}
 
 #Generate the PC residualised phenotypes
 datapc <- merge(twins, pc, by = "IID")
@@ -70,6 +141,7 @@ datapc <- merge(twins, pc, by = "IID")
 
 
 resid_df <- NULL
+
 for (i in 1:length(phenlist))
 {
 #K may require tweaking.. should indicate 1st phenotype column
