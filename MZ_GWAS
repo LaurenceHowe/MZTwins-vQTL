@@ -4,11 +4,12 @@ phenfile=
 covfile=
 malelist=
 
-#Model 1: PCA residualised absolute phenotypic difference ~ Genotype
+#Model 1: Primary analysis
+#Residualised (PCs/covariates) rank transformed phenotypic difference ~ Genotype
 #Add list of phenotypes
-for i in Height BMI Education SBP WHR EverSmk
+for i in Height BMI Education SBP WHR
 do
-j=`printf ${i}_resid`
+j=`printf ${i}_t`
 
 plink \
 --bfile ${plinkfile} \
@@ -16,36 +17,16 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
---covar ${covfile} \
---covar-name Age, Sex \
 --out ./output/M1_${j}
 
 done
 
 
-#Model 2: Absolute phenotypic difference (no PC adjustment) ~ Genotype
+#Model 2: As Model 1 but including the Within-pair mean as a covariate 
 
-for i in Height BMI Education SBP WHR EverSmk
+for i in Height BMI Education SBP WHR
 do
-
-plink \
---bfile ${plinkfile} \
---linear \
---allow-no-sex \
---pheno ${phenfile} \
---pheno-name ${i} \
---covar ${covfile} \
---covar-name Age, Sex \
---out ./output/M2_${i}
-
-done
-
-
-#Model 3: PCA residualised absolute phenotypic difference ~ Genotype + WPM
-
-for i in Height BMI Education SBP WHR EverSmk
-do
-j=`printf ${i}_resid`
+j=`printf ${i}_t`
 k=`printf ${i}M`
 
 plink \
@@ -55,17 +36,33 @@ plink \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --covar ${covfile} \
---covar-name ${k}, Age, Sex \
+--covar-name ${k} \
+--out ./output/M2_${i}
+
+done
+
+#Model 3: As Model 1 but no PC adjustment
+
+for i in Height BMI Education SBP WHR EverSmk
+do
+j=`printf ${i}_nopc`
+plink \
+--bfile ${plinkfile} \
+--linear \
+--allow-no-sex \
+--pheno ${phenfile} \
+--pheno-name ${i} \
 --out ./output/M3_${i}
 
 done
 
 
-#Model 4: Model 1 stratified for sex
 
-for i in Height BMI Education SBP WHR EverSmk
+#Model 4: Model 1 stratified by sex
+
+for i in Height BMI Education SBP WHR
 do
-j=`printf ${i}_resid`
+j=`printf ${i}_nx`
 
 plink \
 --bfile ${plinkfile} \
@@ -73,16 +70,14 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
---covar ${covfile} \
---covar-name ${k}, Age \
 --keep ${malelist} \
 --out ./output/M4_Male_${i}
 
 done
 
-for i in Height BMI Education SBP WHR EverSmk
+for i in Height BMI Education SBP WHR
 do
-j=`printf ${i}_resid`
+j=`printf ${i}_nx`
 
 plink \
 --bfile ${plinkfile} \
@@ -90,49 +85,10 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
---covar ${covfile} \
---covar-name ${k}, Age \
 --remove ${malelist} \
 --out ./output/M4_Female_${i}
 
 done
 
 
-#Model 5: Model 1 with sex interaction term
 
-for i in Height BMI Education SBP WHR EverSmk
-do
-j=`printf ${i}_resid`
-
-plink \
---bfile ${plinkfile} \
---linear interaction \
---parameters 1,2,3,4 \
---allow-no-sex \
---pheno ${phenfile} \
---pheno-name ${j} \
---covar ${covfile} \
---covar-name Sex,Age \
---out ./output/M5_${i}
-
-done
-
-#Model 6: Model 1 with age interaction term
-#Note not possible to run in UK Biobank with limited sample size
-
-for i in Height BMI Education SBP WHR EverSmk
-do
-j=`printf ${i}_resid`
-
-plink \
---bfile ${plinkfile} \
---linear interaction \
---parameters 1,2,3,4 \
---allow-no-sex \
---pheno ${phenfile} \
---pheno-name ${j} \
---covar ${covfile} \
---covar-name Age,Sex \
---out ./output/M6_${i}
-
-done
