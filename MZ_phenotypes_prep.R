@@ -97,8 +97,8 @@ names(mz_diff) <- namelist
 #########################################################
 
 #Merge with principal components
-mzdiffpc <- merge(mzdiff, pc, by = "IID")
-#mzdiffpc <- merge(mzdiff, pc, by = c("FID", "IID")
+mzdiffpc <- merge(mz_diff, pc, by = "IID")
+#mzdiffpc <- merge(mz_diff, pc, by = c("FID", "IID")
 
 #Merge with sex and age
 mzfull <- merge(mzdiffpc, sexage, by = "IID") 
