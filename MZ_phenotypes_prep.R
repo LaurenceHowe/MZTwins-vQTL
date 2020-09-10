@@ -25,6 +25,7 @@ require(data.table)
 require(dplyr)
 require(tidyr)
 require(RNOmni)
+
 #############
 #Main script#
 #############
@@ -111,9 +112,7 @@ mzfull <- merge(mzdiffpc, sexage, by = "IID")
 #Phenotype b) _nopc includes age,sex
 #Phenotype c) _nx includes age,10pcs 
 
-resid_a <- NULL
-resid_b <- NULL
-resid_c <- NULL
+resid_df <- NULL
 
 for (i in 1:length(phenlist))
 {
@@ -125,37 +124,31 @@ mzfull$PHEN <- mzfull[, ..k]
 ##Generate residuals for Phenotypes A, B and C.
 
 modelA <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age + Sex, data = mzfull)
+testA <- mzfull[ , phenlist[i], with = FALSE]
+names(testA) <- c("V1")
+testA$V1[! is.na(test$V1)]  <- c(resid(modelA))
+  
 modelB <- lm(PHEN ~ Age + Sex, data = mzfull)
+testB <- mzfull[ , phenlist[i], with = FALSE]
+names(testB) <- c("V1")
+testB$V1[! is.na(test$V1)]  <- c(resid(modelB))
+  
 modelC <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age, data = mzfull)
+testC <- mzfull[ , phenlist[i], with = FALSE]
+names(testC) <- c("V1")
+testC$V1[! is.na(test$V1)]  <- c(resid(modelC))
+  
+resid_ABC <- cbind(testA, testB, testC)
 
-test <- datapcinfo[ , phenlist[i], with = FALSE]
-names(test) <- c("V1")
-test$V1[! is.na(test$V1)]  <- c(model.st)
-
-resid_t <- cbind(resid_t, test)
+  
+resid_df <- cbind(resid_df, resid_ABC)
 }
 
-#Generate the PC residualised phenotypes
-datapc <- merge(twins, pc, by = "IID")
-#datapc <- merge(twins, pc, by = c("FID", "IID")
+############################
+#Rank normal transformation#
+############################
 
-
-resid_df <- NULL
-
-for (i in 1:length(phenlist))
-{
-#K may require tweaking.. should indicate 1st phenotype column
-#Add number of PCs depending on study, only 200 twin pairs in UKB so went with 10.
-k <- i + 4
-datapc$PHEN <- datapc[, ..k]
-model <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10, data = datapc)
-
-test <- datapc[ , phenlist[i], with = FALSE]
-names(test) <- c("V1")
-test$V1[! is.na(test$V1)]  <- c(resid(model))
-
-resid_df <- cbind(resid_df, test)
-}
+rnorm = apply(tmp2[,..Proteins], 2, rankNorm)
 
 
 
