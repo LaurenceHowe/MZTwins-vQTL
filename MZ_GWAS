@@ -94,7 +94,6 @@ plink \
 --out ./output/${study}_M4_Female_${i}
 
 done
-done
 
 
 
