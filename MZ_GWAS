@@ -7,9 +7,9 @@ malelist=
 #Model 1: Primary analysis
 #Residualised (PCs/covariates) rank transformed phenotypic difference ~ Genotype
 #Add list of phenotypes
-# Add study name 
+# Add study name. If longitudinal data, indicate which age group e.g. TEDS_child, TEDS_adol TEDS_adult
 
-for study in studyname
+for study in TEDS_child TEDS_adult
 do
 
 for i in Height BMI Education SBP WHR
