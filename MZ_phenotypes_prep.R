@@ -9,10 +9,12 @@
 #Filepath names, please edit with file paths and output names#
 ##############################################################
 
+#Paths/names of the three input files
 mzname <- paste(" ")
 phenname <- paste(" ")
 pcname <- paste(" ")
 
+#Paths/names of the three output files: e.g. TEDS.Phenotypes.txt
 outphenname <- paste(" ")
 outcovname <- paste(" ")
 malelistname <- paste(" ")
