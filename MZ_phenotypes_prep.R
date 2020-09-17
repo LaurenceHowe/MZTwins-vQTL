@@ -169,20 +169,7 @@ namelist2 <- cbind(namelist2, temp4)
 names(resid_df) <- namelist2
 
 
-namelist_rnt <- NULL
 
-for (i in phenlist)
-{
-temp1 <- paste(i, "A", sep="")
-temp2 <- paste(i, "B", sep="")
-temp3 <- paste(i, "C", sep="")
-
-temp4 <- cbind(temp1, temp2, temp3)
-
-namelist_rnt <- cbind(namelist_rnt, temp4)
-}
-
-names(resid_df) <- namelist_rnt
 
 ############################
 #Rank normal transformation#
@@ -192,7 +179,7 @@ names(resid_df) <- namelist_rnt
 
 output <- NULL
 
-for (i in 1:length(namelist_rnt))
+for (i in 1:length(namelist_2))
 {
 
 resid_df$PHEN <- resid_df[, ..i]
@@ -215,7 +202,7 @@ output <- cbind(output, out)
 output2 <- as.data.frame(output)
 
 #Add the names
-names(output2) <- namelist_rnt
+names(output2) <- namelist2
 
 ################################
 #Combine to create output files#
