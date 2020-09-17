@@ -3,14 +3,11 @@ plinkfile=
 phenfile=
 covfile=
 malelist=
+study=
 
 #Model 1: Primary analysis
 #Residualised (PCs/covariates) rank transformed phenotypic difference ~ Genotype
 #Add list of phenotypes
-# Add study name(s). If longitudinal data, indicate which age group e.g. TEDS_child, TEDS_adol TEDS_adult
-
-for study in TEDS_child TEDS_adult
-do
 
 for i in height bmi edu sbp whr
 do
@@ -23,7 +20,7 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${j} \
---out ./output/"$study"_M1_${j}
+--out ./output/${study}_M1_${j}
 
 done
 
@@ -43,7 +40,7 @@ plink \
 --pheno-name ${j} \
 --covar ${covfile} \
 --covar-name ${k} \
---out ./output/"$study"_M2_${i}
+--out ./output/${study}_M2_${i}
 
 done
 
@@ -58,7 +55,7 @@ plink \
 --allow-no-sex \
 --pheno ${phenfile} \
 --pheno-name ${i} \
---out ./output/"$study"_M3_${i}
+--out ./output/${study}_M3_${i}
 
 done
 
@@ -77,7 +74,7 @@ plink \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --keep ${malelist} \
---out ./output/"$study"_M4_Male_${i}
+--out ./output/${study}_M4_Male_${i}
 
 done
 
@@ -92,7 +89,7 @@ plink \
 --pheno ${phenfile} \
 --pheno-name ${j} \
 --remove ${malelist} \
---out ./output/$"$study"_M4_Female_${i}
+--out ./output/${study}_M4_Female_${i}
 
 done
 done
