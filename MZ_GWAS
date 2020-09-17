@@ -4,7 +4,7 @@ phenfile=
 covfile=
 malelist=
 
-#Add study name (e.g. TEDS-adults)
+#Add study name (e.g. TEDS)
 study=
 
 #Model 1: Primary analysis
