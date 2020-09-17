@@ -1,8 +1,10 @@
-#MZ twins GWAS: Add paths
+#MZ twins GWAS: Add paths for filenames
 plinkfile=
 phenfile=
 covfile=
 malelist=
+
+#Add study name (e.g. TEDS-adults)
 study=
 
 #Model 1: Primary analysis
