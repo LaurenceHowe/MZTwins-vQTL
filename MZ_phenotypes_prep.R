@@ -179,7 +179,7 @@ names(resid_df) <- namelist2
 
 output <- NULL
 
-for (i in 1:length(namelist_2))
+for (i in 1:length(namelist2))
 {
 
 resid_df$PHEN <- resid_df[, ..i]
@@ -216,6 +216,7 @@ covariates <- cbind(sexage, ave)
 males <- covariates[which(covariates$Sex == 1), ]
 males2 <- males[, c(1:2)]
 
+#Write output files
 write.table(phenotypes,outphenname, quote = F, row.names = F)
 write.table(covariates,outcovname, quote = F, row.names = F)
 write.table(males2, malelistname, quote = F, row.names = F)
