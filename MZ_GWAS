@@ -5,6 +5,7 @@ covfile=
 malelist=
 
 #Add study name (e.g. TEDS)
+#Note the GWAS should be performed separately for different sets of the study such as TEDS_Adults and TEDS_Children
 study=
 
 #Model 1: Primary analysis
