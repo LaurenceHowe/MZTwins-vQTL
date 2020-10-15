@@ -100,13 +100,20 @@ namelist <- cbind(namelist, temp)
 
 names(mz_diff) <- namelist
 
+
+#Extract IDs in same order as dataframe of MZ differences
+IDs <- twin1o[, c(1,2)]
+
+#Merge MZ differences with IDs
+mz_diff2 <- cbind(IDs, mz_diff) 
+
 #########################################################
 #Merge MZ differences with covariates for transformation#
 #########################################################
 
-#Merge with principal components
-mzdiffpc <- merge(mz_diff, pc, by = "IID")
-#mzdiffpc <- merge(mz_diff, pc, by = c("FID", "IID")
+#Merge with principal components, might be easiest to merge on FID in case only one twin is genotyped
+mzdiffpc <- merge(mz_diff2, pc, by = "IID")
+#mzdiffpc <- merge(mz_diff2, pc, by = c("FID", "IID")
 
 #Merge with sex and age
 mzfull <- merge(mzdiffpc, sexage, by = "IID") 
