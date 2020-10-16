@@ -21,9 +21,9 @@ The analysis plan and details on selecting phenotypes can be found [here](https:
 <br>
 <br>
 
-<b> <b> Please complete the study descriptives file found [here](https://uob-my.sharepoint.com/:x:/g/personal/lh14833_bristol_ac_uk/EVmXGuMddR1Kh5H1TOzDZSoBerEDh7n54Cap4hy5a-paLg?e=8hwe1S), to be summitted along with GWAS summary statistics.
+Please complete the study descriptives file found [here](https://uob-my.sharepoint.com/:x:/g/personal/lh14833_bristol_ac_uk/EVmXGuMddR1Kh5H1TOzDZSoBerEDh7n54Cap4hy5a-paLg?e=8hwe1S), to be summitted along with GWAS summary statistics.
 
 <br>
 <br>
 
-Email Laurence.Howe@bristol.ac.uk / E.Assary@qmul.ac.uk if you have any queries.
+<b> Email Laurence.Howe@bristol.ac.uk / E.Assary@qmul.ac.uk if you have any queries. </b>
