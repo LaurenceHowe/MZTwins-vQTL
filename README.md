@@ -16,12 +16,12 @@ Note that these scripts are not fully automated so will require some tweaking, m
 <br>
 <br>
 
-The analysis plan and details on selecting phenotypes can be found [here](https://uob-my.sharepoint.com/:x:/g/personal/lh14833_bristol_ac_uk/Ef8oLfGUFO9JnKIxxQruq18BT9dRD5-6jg3zKbac7hiQaw?e=lRHnVp).
+The analysis plan and details on selecting phenotypes can be found [here](https://uob-my.sharepoint.com/:w:/g/personal/lh14833_bristol_ac_uk/ETjDr5gvZMBPpnV0WSAcTS8BatLUpd4jYM81vaq9l48-Qw).
 
 <br>
 <br>
 
-<b> <b> Please complete the study descriptives file found [here](https://uob-my.sharepoint.com/:x:/g/personal/lh14833_bristol_ac_uk/Ef8oLfGUFO9JnKIxxQruq18BT9dRD5-6jg3zKbac7hiQaw?e=lRHnVp), to be summitted along with GWAS summary statistics.
+<b> <b> Please complete the study descriptives file found [here](https://uob-my.sharepoint.com/:x:/g/personal/lh14833_bristol_ac_uk/EVmXGuMddR1Kh5H1TOzDZSoBerEDh7n54Cap4hy5a-paLg?e=8hwe1S), to be summitted along with GWAS summary statistics.
 
 <br>
 <br>
