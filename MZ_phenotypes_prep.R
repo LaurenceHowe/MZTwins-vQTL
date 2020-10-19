@@ -129,7 +129,7 @@ mzfull <- merge(mzdiffpc, sexage, by = "IID")
 
 resid_df <- NULL
 
-for (i in 1:length(phenlist))
+for (i in 1:length(namelist))
 {
 #K may require tweaking.. should indicate 1st phenotype column
 #Add 10 PCs and age and sex
