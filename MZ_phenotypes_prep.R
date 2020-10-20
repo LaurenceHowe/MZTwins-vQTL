@@ -112,11 +112,11 @@ mz_diff2 <- cbind(IDs, mz_diff)
 #########################################################
 
 #Merge with principal components, might be easiest to merge on FID in case only one twin is genotyped
-mzdiffpc <- merge(mz_diff2, pc, by = "IID")
+mzdiffpc <- merge(mz_diff2, pc, by = "FID")
 #mzdiffpc <- merge(mz_diff2, pc, by = c("FID", "IID")
 
 #Merge with sex and age
-mzfull <- merge(mzdiffpc, sexage, by = "IID") 
+mzfull <- merge(mzdiffpc, sexage, by = "FID") 
 #mzfull <- merge(mzdiffpc, sexage, by = c("FID", "IID")
 
 ####################################################
@@ -196,7 +196,7 @@ temp <- resid_df[! is.na(resid_df$PHEN), ]
 
 #Rank normalise
 ranknorm_phen <- rankNorm(temp$PHEN)
-resid_df$PHEN2 <- NULL
+#resid_df$PHEN2 <- NULL
 resid_df$PHEN2[! is.na(resid_df$PHEN)] <- ranknorm_phen
 
 #Extract rank normalised phenotype
