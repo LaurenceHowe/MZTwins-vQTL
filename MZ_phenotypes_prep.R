@@ -139,17 +139,17 @@ mzfull$PHEN <- mzfull[, ..k]
 ##Generate residuals for _t, _nopc and _nx
 
 model_t <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age + Sex, data = mzfull)
-test_t <- mzfull[ , phenlist[i], with = FALSE]
+test_t <- mzfull[ , namelist[i], with = FALSE]
 names(test_t) <- c("V1")
 test_t$V1[! is.na(test_t$V1)]  <- c(resid(model_t))
   
 model_nopc <- lm(PHEN ~ Age + Sex, data = mzfull)
-test_nopc <- mzfull[ , phenlist[i], with = FALSE]
+test_nopc <- mzfull[ , namelist[i], with = FALSE]
 names(test_nopc) <- c("V1")
 test_nopc$V1[! is.na(test_nopc$V1)]  <- c(resid(model_nopc))
   
 model_nx <- lm(PHEN ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + Age, data = mzfull)
-test_nx <- mzfull[ , phenlist[i], with = FALSE]
+test_nx <- mzfull[ , namelist[i], with = FALSE]
 names(test_nx) <- c("V1")
 test_nx$V1[! is.na(test_nx$V1)]  <- c(resid(model_nx))
   
