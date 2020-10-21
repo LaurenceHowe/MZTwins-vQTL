@@ -57,7 +57,7 @@ plink \
 --linear \
 --allow-no-sex \
 --pheno ${phenfile} \
---pheno-name ${i} \
+--pheno-name ${j} \
 --out ./output/${study}_M3_${i}
 
 done
